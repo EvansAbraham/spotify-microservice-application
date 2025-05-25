@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRoutes from "./routes.js";
+import helmet from 'helmet';
+import cors from "cors";
 
 dotenv.config();
 
@@ -22,6 +24,8 @@ const app = express();
 app.use(express.json());
 
 app.use("/api/v1", userRoutes);
+app.use(helmet());
+app.use(cors());
 
 app.get("/", (req, res)=>{
     res.send("Server is working!");

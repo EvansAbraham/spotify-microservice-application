@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import { sql } from "./config/db.js";
 import adminRoutes from "./route.js";
 import cloudinary from "cloudinary";
+import helmet from "helmet";
+import cors from "cors";
 
 dotenv.config();
 cloudinary.v2.config({
@@ -46,6 +48,8 @@ async function initDb() {
     }
 }
 const port = process.env.PORT;
+app.use(helmet());
+app.use(cors());
 
 app.use("/api/v1", adminRoutes)
 
