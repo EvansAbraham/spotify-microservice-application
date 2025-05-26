@@ -5,12 +5,39 @@ import adminRoutes from "./route.js";
 import cloudinary from "cloudinary";
 import helmet from "helmet";
 import cors from "cors";
+import redis from "redis";
 
 dotenv.config();
+
+const port = process.env.PORT;
+const cloudName = process.env.CLOUD_NAME;
+const cloudApiKey = process.env.CLOUD_API_KEY;
+const cloudApiSecret = process.env.CLOUD_API_SECRET;
+const redisHost = process.env.REDIS_HOST;
+const redisPassword = process.env.REDIS_PASSWORD;
+const redisPort = process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT): undefined;
+
+if (!port || !cloudName || !cloudApiKey || !cloudApiSecret || !redisHost || !redisPassword || !redisPort) {
+    throw new Error("Environment variables are not set. Server cannot start.");
+}
+
+export const redisClient = redis.createClient({
+    password: redisPassword,
+    socket: {
+        host: redisHost,
+        port: redisPort,
+    }
+});
+
+redisClient
+    .connect()
+    .then(() => console.log("Redis Connected Successfully!"))
+    .catch(console.error);
+
 cloudinary.v2.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.CLOUD_API_KEY,
-    api_secret: process.env.CLOUD_API_SECRET,
+    cloud_name: cloudName,
+    api_key: cloudApiKey,
+    api_secret: cloudApiSecret,
 });
 
 const app = express();
@@ -47,7 +74,7 @@ async function initDb() {
         console.error("Error database initialization!", error);
     }
 }
-const port = process.env.PORT;
+
 app.use(helmet());
 app.use(cors());
 

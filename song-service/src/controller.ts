@@ -1,5 +1,6 @@
 import { sql } from "./config/db.js";
 import TryCatch from "./TryCatch.js";
+import { redisClient } from './index.js';
 
 interface Album {
     id: string;
@@ -11,25 +12,76 @@ interface Album {
 export const getAllAlbum = TryCatch(async(req, res)=> {
     let albums;
 
-    albums = await sql.query(`SELECT * FROM albums`);
+    const CACHE_EXPIRE = 1800;
 
-    res.json(albums.rows);
+    if (redisClient.isReady) {
+        albums = await redisClient.get("albums");
+    };
+
+    if (albums) {
+        console.log("Cache Hit!");
+        res.json(JSON.parse(albums));
+        return;
+    } else {
+        console.log("Cache miss!");
+        albums = await sql.query(`SELECT * FROM albums`);
+    
+        if(redisClient.isReady) {
+            await redisClient.set("albums", JSON.stringify(albums.rows), {
+                EX: CACHE_EXPIRE,
+            });
+        };
+
+        res.json(albums.rows);
+        return;
+    };
+
 });
 
 export const getAllSongs = TryCatch(async(req, res)=>{
     let songs;
 
-    songs = await sql.query(`SELECT * FROM songs`);
+    const CACHE_EXPIRE = 1800;
 
-    res.json(songs.rows);
+    if (redisClient.isReady) {
+        songs = await redisClient.get("songs");
+    };
+
+    if (songs) {
+        console.log("Cache Hit!");
+        res.json(JSON.parse(songs));
+        return;
+    } else {
+        console.log("Cache miss!");
+        songs = await sql.query(`SELECT * FROM songs`);
+    
+        if(redisClient.isReady) {
+            await redisClient.set("songs", JSON.stringify(songs.rows), {
+                EX: CACHE_EXPIRE,
+            });
+        };
+
+        res.json(songs.rows);
+        return;
+    };
 
 });
 
-export const getAllSongsofAlbum = TryCatch(async(req, res)=>{
+export const getAllSongsOfAlbum = TryCatch(async(req, res)=>{
 
     const { id } = req.params;
+    const CACHE_EXPIRY = 1800;
 
     let albums, songs;
+
+    if (redisClient.isReady) {
+        const cacheData = await redisClient.get(`album_songs_${id}`);
+        if (cacheData) {
+            console.log("Cache Hit!");
+            res.json(JSON.parse(cacheData));
+            return;
+        }
+    }
 
     albums = await sql.query(`SELECT * FROM albums WHERE id=$1`,[id]);
 
@@ -44,6 +96,12 @@ export const getAllSongsofAlbum = TryCatch(async(req, res)=>{
 
     const response = { songs: songs.rows, albums: albums.rows[0] as Album };
 
+    if (redisClient.isReady) {
+        await redisClient.set(`album_songs_${id}`, JSON.stringify(response), {
+          EX: CACHE_EXPIRY,
+        });
+      }
+    console.log("cache miss");
     res.json(response);
 });
 

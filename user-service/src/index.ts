@@ -7,9 +7,16 @@ import cors from "cors";
 
 dotenv.config();
 
+const port = process.env.PORT;
+const mongoDbUri = process.env.MONGODB_URI as string;
+
+if (!port || !mongoDbUri) {
+    throw new Error("Environment variables are not set. Server cannot start.");
+}
+
 const connectDb = async () => {
     try {
-        mongoose.connect(process.env.MONGODB_URI as string, {
+        mongoose.connect( mongoDbUri, {
             dbName: "spotifyUser",
         });
         console.log("Database Connected!");
@@ -30,8 +37,6 @@ app.use(cors());
 app.get("/", (req, res)=>{
     res.send("Server is working!");
 })
-
-const port = process.env.PORT;
 
 app.listen(port, () => {
     console.log(`Application running in port ${port}`);
