@@ -1,0 +1,36 @@
+services:
+  user:
+    build:
+      context: ./user-service
+    container_name: user-service
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./user-service/.env
+    volumes:
+      - ./user-service:/app
+      - /app/node_modules
+
+  admin:
+    build:
+      context: ./admin-service
+    container_name: admin-service
+    ports:
+      - "7000:7000"
+    env_file:
+      - ./admin-service/.env
+    volumes:
+      - ./admin-service:/app
+      - /app/node_modules
+
+  song:
+    build:
+      context: ./song-service
+    container_name: song-service
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./song-service/.env
+    volumes:
+      - ./song-service:/app
+      - /app/node_modules
