@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import type { SongContextType } from "../context/SongContext";
 import { SongContext } from "../context/SongContext";
+import type { SongContextType } from "../context/SongContext";
 
 export const useSongData = (): SongContextType => {
     const context = useContext(SongContext);

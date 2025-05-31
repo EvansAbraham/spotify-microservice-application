@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState, type ReactNode } from "react";
-import { SongContext } from "../context/SongContext";
+import  axios  from 'axios';
 import type { Song, Album } from "../types";
+import { SongContext } from "../context/SongContext";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 
 const server = import.meta.env.VITE_SONG_API;
-import  axios  from 'axios';
   
 interface SongProviderProps {
   children: ReactNode;
