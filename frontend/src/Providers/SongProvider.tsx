@@ -19,7 +19,7 @@ export const SongProvider: React.FC<SongProviderProps> = ({ children }) => {
   const fetchSongs = useCallback(async()=>{
     setLoading(true);
     try {
-      const { data } = await axios.get<Song[]>(`${server}/api/v1/song/all`);
+      const { data } = await axios.get<Song[]>(`${server}/api/v1/songs/all`);
       setSongs(data);
       if (data.length > 0) setSelectedSong(data[0].id.toString());
       setIsPlaying(false);
@@ -45,7 +45,7 @@ export const SongProvider: React.FC<SongProviderProps> = ({ children }) => {
   const fetchAlbums = useCallback(async()=>{
     setLoading(true);
     try{
-      const { data } = await axios.get<Album[]>(`${server}/api/v1/album/all`);
+      const { data } = await axios.get<Album[]>(`${server}/api/v1/albums/all`);
       setAlbums(data);
     } catch(error) {
       console.error(error);

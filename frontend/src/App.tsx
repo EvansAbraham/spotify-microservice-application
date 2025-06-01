@@ -1,17 +1,23 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import PlayList from "./pages/Playlist";
+import PlayList from "./pages/PlayList";
+import { SongProvider } from "./providers/SongProvider";
+import { UserProvider } from "./providers/UserProvider";
+import Album from "./pages/Album";
 
 const App = () => {
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home/>} />
-          <Route path="/playlist" element={<PlayList/>} />
-        </Routes>
-      </BrowserRouter>
-    </>
+    <UserProvider>
+      <SongProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home/>} />
+            <Route path="/album/:id" element={<Album/>}/>
+            <Route path="/playlist" element={<PlayList/>} />
+          </Routes>
+        </BrowserRouter>
+      </SongProvider>
+    </UserProvider>
   )
 }
 

@@ -13,11 +13,12 @@ const port = process.env.PORT;
 const cloudName = process.env.CLOUD_NAME;
 const cloudApiKey = process.env.CLOUD_API_KEY;
 const cloudApiSecret = process.env.CLOUD_API_SECRET;
+const website = process.env.FRONTEND_ORIGIN;
 const redisHost = process.env.REDIS_HOST;
 const redisPassword = process.env.REDIS_PASSWORD;
 const redisPort = process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT): undefined;
 
-if (!port || !cloudName || !cloudApiKey || !cloudApiSecret || !redisHost || !redisPassword || !redisPort) {
+if (!port || !cloudName || !cloudApiKey || !cloudApiSecret || !redisHost || !redisPassword || !redisPort || !website) {
     throw new Error("Environment variables are not set. Server cannot start.");
 }
 
@@ -41,6 +42,11 @@ cloudinary.v2.config({
 });
 
 const app = express();
+app.use(helmet());
+app.use(cors({
+    origin: website,
+    credentials: true,
+}));
 
 app.use(express.json());
 
@@ -74,9 +80,6 @@ async function initDb() {
         console.error("Error database initialization!", error);
     }
 }
-
-app.use(helmet());
-app.use(cors());
 
 app.use("/api/v1", adminRoutes)
 

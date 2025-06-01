@@ -1,8 +1,8 @@
 import axios from "axios";
 import type { User } from "../types";
 import toast, { Toaster } from "react-hot-toast";
-import { type ReactNode, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
+import { type ReactNode, useEffect, useState } from "react";
 
 const server = import.meta.env.VITE_USER_API;
 
@@ -75,10 +75,16 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
 
     async function fetchUser() {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsAuth(false);
+        setUser(null);
+        return;
+      }
         try {
           const { data } = await axios.get(`${server}/api/v1/user/me`, {
             headers: {
-              token: localStorage.getItem("token"),
+              token,
             },
           });
     

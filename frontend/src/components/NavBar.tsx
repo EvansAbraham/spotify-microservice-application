@@ -1,9 +1,14 @@
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import { useNavigate } from "react-router-dom"
 import Button from "./Button";
+import { useNavigate } from "react-router-dom"
+import { useUserData } from "../hooks/useUserData";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const { isAuth, logoutUser } = useUserData();
+  const logoutUserHandler = () => {
+    logoutUser();
+  };
   return (
     <>
       <div className="w-full flex justify-between items-center font-medium">
@@ -14,7 +19,11 @@ const NavBar = () => {
         <div className="flex items-center gap-2">
           <Button className="hidden md:block">Explore Premium</Button>
           <Button className="hidden md:block">Install App</Button>
-          <Button className="hidden md:block">Logout</Button>
+          {isAuth ? (
+            <Button onClick={logoutUserHandler} className="hidden md:block">Logout</Button>
+          ):(
+            <Button to="/login">Login</Button>
+          )}
         </div>
       </div>
       <div className="flex items-center gap-2 mt-4">

@@ -8,9 +8,10 @@ import cors from "cors";
 dotenv.config();
 
 const port = process.env.PORT;
+const website = process.env.FRONTEND_ORIGIN;
 const mongoDbUri = process.env.MONGODB_URI as string;
 
-if (!port || !mongoDbUri) {
+if (!port || !mongoDbUri || !website) {
     throw new Error("Environment variables are not set. Server cannot start.");
 }
 
@@ -29,10 +30,13 @@ const connectDb = async () => {
 const app = express();
 
 app.use(express.json());
+app.use(helmet());
+app.use(cors({
+    origin: website,
+    credentials: true,
+}));
 
 app.use("/api/v1", userRoutes);
-app.use(helmet());
-app.use(cors());
 
 app.get("/", (req, res)=>{
     res.send("Server is working!");

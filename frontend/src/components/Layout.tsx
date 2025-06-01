@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react';
 import NavBar from './NavBar';
-import SideBar from './SideBar';
 import Player from './Player';
+import SideBar from './SideBar';
+import type { ReactNode } from 'react';
 
 interface LayoutProps {
     children: ReactNode;

@@ -1,12 +1,14 @@
-import { GoHome, GoSearch, GoArrowRight, GoPlus } from "react-icons/go";
-import { BiLibrary } from "react-icons/bi";
-import MenuItem from "./MenuItem";
-import { useNavigate } from "react-router-dom";
-import PlaylistCard from "./PlaylistCard";
 import Button from './Button';
+import MenuItem from "./MenuItem";
+import PlaylistCard from "./PlaylistCard";
+import { BiLibrary } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
+import { useUserData } from '../hooks/useUserData';
+import { GoHome, GoSearch, GoArrowRight, GoPlus } from "react-icons/go";
 
 const SideBar = () => {
   const navigate = useNavigate();
+  const { user } = useUserData();
   return (
     <div className="w-[25%] h-full p-2 flex-col gap-2 hidden lg:flex">
       <div className="bg-[#212121] h-[15%] rounded flex flex-col justify-around">
@@ -29,6 +31,9 @@ const SideBar = () => {
             <p className="font-light text-center">We'll keep you update on new episodes</p>
             <Button className="mt-4">Browse Podcast</Button>
           </div>
+          {user && user.role === "admin" && (
+            <Button to='/admin/dashboard'>Admin Dashboard</Button>
+          )}
       </div>
     </div>
   )
