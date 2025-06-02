@@ -10,7 +10,7 @@ const Home = () => {
     <div>
       {loading ? ( <Loading/> ) : (
         <Layout>  
-          <div className="mb-4">
+          <div className="mb-4 h-max">
             <h1 className="my-5 font-bold text-2xl">Featured Charts</h1>
             <div className="flex overflow-auto">
               {albums.map((album)=> {

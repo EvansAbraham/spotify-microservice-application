@@ -16,6 +16,7 @@ export const SongProvider: React.FC<SongProviderProps> = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [albums, setAlbums] = useState<Album[]>([]);
 
+
   const fetchSongs = useCallback(async()=>{
     setLoading(true);
     try {
@@ -55,20 +56,24 @@ export const SongProvider: React.FC<SongProviderProps> = ({ children }) => {
   }, []);
 
   const [index, setIndex] = useState(0);
+  const hasNextSong = songs.length > 0 && index < songs.length - 1;
+  const hasPrevSong = songs.length > 0 && index > 0;
 
   const nextSong = useCallback(()=>{
+    if (!hasNextSong) return;
     if (songs.length === 0) return;
     const nextIndex = index === songs.length - 1 ? 0 : index + 1;
     setIndex(nextIndex);
     setSelectedSong(songs[nextIndex].id);
-  }, [index, songs, setSelectedSong]);
+  }, [index, songs, hasNextSong, setSelectedSong]);
 
   const prevSong = useCallback(() => {
+    if (!hasPrevSong) return;
     if (songs.length === 0) return;
     const prevIndex = index === 0 ? songs.length - 1 : index - 1;
     setIndex(prevIndex);
     setSelectedSong(songs[prevIndex].id);
-  }, [index, songs, setSelectedSong]);
+  }, [index, songs, hasPrevSong, setSelectedSong]);
 
   const [albumSong, setAlbumSong] = useState<Song[]>([]);
   const [albumData, setAlbumData] = useState<Album | null>(null);
@@ -110,6 +115,8 @@ export const SongProvider: React.FC<SongProviderProps> = ({ children }) => {
       albumSong,
       fetchSongs,
       fetchAlbums,
+      hasNextSong,
+      hasPrevSong,
     }}
     >{children}</SongContext.Provider>
   );

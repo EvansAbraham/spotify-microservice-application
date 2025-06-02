@@ -17,6 +17,8 @@ export interface SongContextType {
     fetchAlbumSongs: (id: string) => Promise<void>;
     fetchSongs: () => Promise<void>;
     fetchAlbums: () => Promise<void>;
+    hasNextSong: boolean,
+    hasPrevSong: boolean,
   }
   
   export const SongContext = createContext<SongContextType | undefined>(undefined); 
