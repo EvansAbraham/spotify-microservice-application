@@ -1,12 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { IUser } from "./types/index.js";
 
-export interface IUser extends Document {
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-    playlist: string[];
-};
+export type UserDocument = IUser & Document;
 
 const schema:Schema<IUser> = new Schema({
     name: { type: String, required: true },

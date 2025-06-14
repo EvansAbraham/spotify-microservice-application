@@ -81,8 +81,8 @@ export const SongProvider: React.FC<SongProviderProps> = ({ children }) => {
   const fetchAlbumSongs = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      const { data } = await axios.get<{ songs: Song[]; album: Album }>(`${server}/api/v1/album/${id}`);
-      setAlbumData(data.album);
+      const { data } = await axios.get<{ songs: Song[]; albums: Album }>(`${server}/api/v1/album/${id}`);
+      setAlbumData(data.albums);
       setAlbumSong(data.songs);
     } catch(error) {
       console.error(error);

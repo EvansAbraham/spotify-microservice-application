@@ -4,23 +4,7 @@ import getBuffer from "./config/dataUri.js";
 import  cloudinary  from 'cloudinary';
 import { sql } from "./config/db.js";
 import { redisClient } from "./index.js";
-
-interface Album {
-    id: string;
-    title: string;
-    description: string;
-    thumbnail: string;
-}
-
-interface Song {
-    id: string;
-    title: string;
-    description: string;
-    thumbnail?: string;
-    audio: string;
-    album_id: string | null;
-    created_at: string;
-}
+import { Song, Album } from "./types/index.js";
 
 interface AuthenticatedRequest extends Request{
     user? :{
@@ -30,6 +14,8 @@ interface AuthenticatedRequest extends Request{
 }
 
 export const addAlbum = TryCatch(async(req: AuthenticatedRequest, res)=>{
+    console.log("[addAlbum] req.user:", req.user);
+
     if(req.user?.role != "admin") {
         res.status(401).json({
             message: "Unauthorized Action Perform!"

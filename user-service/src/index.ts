@@ -33,8 +33,9 @@ app.use(express.json());
 app.use(helmet());
 app.use(cors({
     origin: website,
+    allowedHeaders: ['Content-Type', 'Authorization', 'token'],
     credentials: true,
-}));
+  }));
 
 app.use("/api/v1", userRoutes);
 

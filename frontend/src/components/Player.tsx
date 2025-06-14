@@ -93,6 +93,34 @@ const Player = () => {
     };
   }, [hasNextSong, isPlaying, nextSong, setIsPlaying]);
 
+  const isPlayingRef = useRef(isPlaying);
+
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
+  
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.load();
+      if (isPlayingRef.current) {
+        audioRef.current.play().catch(e => console.log("Play error:", e));
+      }
+    }
+  }, [song]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play().catch(e => console.log("Play error:", e));
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying]);
+  
+  
+
   return (
     <div className="px-2">
       {song && (

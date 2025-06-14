@@ -79,16 +79,17 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       if (!token) {
         setIsAuth(false);
         setUser(null);
+        setLoading(false);
         return;
       }
         try {
           const { data } = await axios.get(`${server}/api/v1/user/me`, {
             headers: {
-              token,
+              Authorization: `Bearer ${token}`,
             },
           });
     
-          setUser(data);
+          setUser(data.user || data);
           setIsAuth(true);
           setLoading(false);
         } catch (error) {
@@ -107,12 +108,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
       async function addToPlaylist(id: string) {
         try {
+          const token = localStorage.getItem("token");
           const { data } = await axios.post(
             `${server}/api/v1/song/${id}`,
             {},
             {
               headers: {
-                token: localStorage.getItem("token"),
+                Authorization: `Bearer ${token}`,
               },
             }
           );

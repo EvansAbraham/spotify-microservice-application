@@ -30,10 +30,10 @@ const SideBar = () => {
             <h1>Let's find some podcasts to follow!</h1>
             <p className="font-light text-center">We'll keep you update on new episodes</p>
             <Button className="mt-4">Browse Podcast</Button>
+            {user && user.role === "admin" && (
+              <Button to='/admin/dashboard' className='mt-4'>Admin Dashboard</Button>
+            )}
           </div>
-          {user && user.role === "admin" && (
-            <Button to='/admin/dashboard'>Admin Dashboard</Button>
-          )}
       </div>
     </div>
   )
