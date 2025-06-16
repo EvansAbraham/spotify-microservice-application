@@ -69,6 +69,8 @@ export const addAlbum = TryCatch(async(req: AuthenticatedRequest, res)=>{
 
 export const addSong = TryCatch(async(req: AuthenticatedRequest, res)=>{
 
+    console.log("[addAlbum] req.user:", req.user);
+
     if(req.user?.role != "admin") {
         res.status(401).json({
             message: "Unauthorized Action Perform!"
@@ -110,6 +112,7 @@ export const addSong = TryCatch(async(req: AuthenticatedRequest, res)=>{
 
         if (redisClient.isReady) {
             await redisClient.del("songs");
+            await redisClient.del(`album:${album}`);
             console.log("Cache invalidated for songs");
           }
 

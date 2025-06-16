@@ -70,7 +70,7 @@ const Album = () => {
                     <MdOutlineDownloadForOffline className="text-2xl"/>
                   )}
                   {" "}
-                  {song.title}
+                  {song.title.slice(0, 30)}
                   </p>
                   <p className="text-[15px] hidden sm:block">
                     {song.description.slice(0, 30)}...
