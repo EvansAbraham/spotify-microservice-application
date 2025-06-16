@@ -1,7 +1,7 @@
+import Button from "./Button";
 import { MdDelete } from "react-icons/md";
 import { useSongData } from "../hooks/useSongData";
 import { useAdminActions } from "../hooks/useAdminActions";
-import Button from "./Button";
 
 const AlbumList = () => {
   const { btnLoading, deleteAlbum } = useAdminActions();

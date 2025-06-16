@@ -1,26 +1,28 @@
-import express from "express";
+import cors from "cors";
+import helmet from 'helmet';
 import dotenv from "dotenv";
+import express from "express";
 import mongoose from "mongoose";
 import userRoutes from "./routes.js";
-import helmet from 'helmet';
-import cors from "cors";
 
 dotenv.config();
 
 const port = process.env.PORT;
+const dbName = process.env.DATABASE_NAME;
 const website = process.env.FRONTEND_ORIGIN;
 const mongoDbUri = process.env.MONGODB_URI as string;
 
-if (!port || !mongoDbUri || !website) {
+if (!port || !mongoDbUri || !website || !dbName) {
     throw new Error("Environment variables are not set. Server cannot start.");
 }
 
 const connectDb = async () => {
     try {
-        mongoose.connect( mongoDbUri, {
-            dbName: "spotifyUser",
+        await mongoose.connect( mongoDbUri, {
+            dbName: dbName,
         });
         console.log("Database Connected!");
+        process.exit(1);
     }
     catch (error) {
         console.error(error);

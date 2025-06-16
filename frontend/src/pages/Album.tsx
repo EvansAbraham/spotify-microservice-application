@@ -4,8 +4,8 @@ import Loading from "../components/Loading";
 import { useParams } from "react-router-dom";
 import { useSongData } from "../hooks/useSongData";
 import { useUserData } from "../hooks/useUserData";
-import { MdOutlineDownloadForOffline } from "react-icons/md";
 import { FaBookmark, FaPlay } from "react-icons/fa";
+import { MdOutlineDownloadForOffline } from "react-icons/md";
 
 const Album = () => {
   

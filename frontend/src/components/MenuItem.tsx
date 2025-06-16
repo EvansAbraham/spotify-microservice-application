@@ -1,5 +1,5 @@
-import type { ComponentType, MouseEventHandler } from "react";
 import { useNavigate } from 'react-router-dom'
+import type { ComponentType, MouseEventHandler } from "react";
 
 interface MenuItemProps {
     icon: ComponentType<{ className?: string }>;

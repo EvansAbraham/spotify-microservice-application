@@ -1,9 +1,9 @@
 import { Request } from "express";
-import TryCatch from "./TryCatch.js";
-import getBuffer from "./config/dataUri.js";
-import  cloudinary  from 'cloudinary';
 import { sql } from "./config/db.js";
+import TryCatch from "./TryCatch.js";
+import  cloudinary  from 'cloudinary';
 import { redisClient } from "./index.js";
+import getBuffer from "./config/dataUri.js";
 import { Song, Album } from "./types/index.js";
 
 interface AuthenticatedRequest extends Request{

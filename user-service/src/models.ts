@@ -1,5 +1,5 @@
-import mongoose, { Document, Schema } from "mongoose";
 import { IUser } from "./types/index.js";
+import mongoose, { Document, Schema } from "mongoose";
 
 export type UserDocument = IUser & Document;
 

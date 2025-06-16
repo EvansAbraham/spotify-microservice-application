@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express";
 import axios from "axios";
 import dotenv from "dotenv";
 import multer from "multer";
 import { IUser } from "./types/index.js";
+import { NextFunction, Request, Response } from "express";
 
 dotenv.config();
 

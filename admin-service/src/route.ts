@@ -1,6 +1,6 @@
 import express from "express";
-import { addAlbum, addSong, addThumbnail, deleteAlbum, deleteSong } from "./controllers.js";
 import uploadFile, { isAuth } from "./middleware.js";
+import { addAlbum, addSong, addThumbnail, deleteAlbum, deleteSong } from "./controllers.js";
 
 const router = express.Router();
 

@@ -1,8 +1,8 @@
-import { User } from "./models.js";
-import TryCatch from "./TryCatch.js";
+import dotenv from 'dotenv';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import dotenv from 'dotenv';
+import { User } from "./models.js";
+import TryCatch from "./TryCatch.js";
 import { AuthenticatedRequest } from "./middleware.js";
 
 dotenv.config();

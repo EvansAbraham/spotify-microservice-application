@@ -1,9 +1,9 @@
-import express from "express";
-import dotenv from "dotenv";
-import songRoutes from "./route.js";
-import helmet from "helmet";
 import cors from "cors";
 import redis from "redis";
+import helmet from "helmet";
+import dotenv from "dotenv";
+import express from "express";
+import songRoutes from "./route.js";
 
 dotenv.config();
 
@@ -22,6 +22,7 @@ export const redisClient = redis.createClient({
     socket: {
         host: redisHost,
         port: redisPort,
+        tls: true
     }
 });
 

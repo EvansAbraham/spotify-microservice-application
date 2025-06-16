@@ -1,6 +1,6 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
+import { useNavigate } from "react-router-dom";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     children: ReactNode;

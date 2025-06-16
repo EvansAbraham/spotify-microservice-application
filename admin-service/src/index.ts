@@ -27,6 +27,7 @@ export const redisClient = redis.createClient({
     socket: {
         host: redisHost,
         port: redisPort,
+        tls: true
     }
 });
 
