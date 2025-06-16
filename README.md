@@ -1,4 +1,4 @@
-# **Spotify Microservice Application <br/>(🚧 Pipeline and Cloud Infra is still under construction along with the README)**
+# **Spotify Microservice Application <br/>(🚧 Pipeline and Cloud Infra are still under construction along with the README)**
 ## **Table of Content:**
 - [**Description**](#description)
 - [**Local Tech Stack**](#local-tech-stack)
