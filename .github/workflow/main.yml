@@ -1,0 +1,31 @@
+name: GitHub to ECS Pipeline
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  deploy-user-service:
+    if: contains(github.event.head_commit.message, 'user-service') || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/pipeline.yml
+    with:
+      service-name: user-service
+      task-definition-path: user-service/task-definition.json
+    secrets: inherit
+  
+  deploy-admin-service:
+    if: contains(github.event.head_commit.message, 'admin-service') || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/pipeline.yml
+    with:
+      service-name: admin-service
+      task-definition-path: admin-service/task-definition.json
+    secrets: inherit
+
+  deploy-song-service:
+    if: contains(github.event.head_commit.message, 'song-service') || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/pipeline.yml
+    with:
+      service-name: song-service
+      task-definition-path: song-service/task-definition.json
+    secrets: inherit

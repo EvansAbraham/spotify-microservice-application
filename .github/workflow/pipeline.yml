@@ -1,0 +1,92 @@
+name: Deploying Microservice
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        required: true
+        type: string
+      task-definition-path:
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_REGION:
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy ${{ inputs.service-name }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION_ID }}
+
+      - uses: aws-actions/amazon-ecr-login@v1
+        id: login-ecr
+      
+      - name: Create .env file
+        run: |
+          set -e
+          cd ${{ inputs.service-name }}
+          touch .env
+
+          if [[ "${{ inputs.service-name }}" == "user-service" ]]; then
+            echo "JWT_KEY=${{ secrets.JWT_KEY }}" >> .env
+            echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
+            echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
+            echo "FRONTEND_ORIGIN=${{ secrets.FRONTEND_ORIGIN }}" >> .env
+            echo "USER_PORT=${{ secrets.USER_PORT }}" >> .env
+          elif [[ "${{ inputs.service-name }}" == "admin-service" ]]; then
+            echo "DB_URL=${{ secrets.DB_URL }}" >> .env
+            echo "USER_URL=${{ secrets.USER_URL }}" >> .env
+            echo "ADMIN_PORT=${{ secrets.ADMIN_PORT }}" >> .env
+            echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
+            echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
+            echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
+            echo "CLOUD_NAME=${{ secrets.CLOUD_NAME }}" >> .env
+            echo "CLOUD_API_KEY=${{ secrets.CLOUD_API_KEY }}" >> .env
+            echo "CLOUD_API_SECRET=${{ secrets.CLOUD_API_SECRET }}" >> .env
+            echo "FRONTEND_ORIGIN=${{ secrets.FRONTEND_ORIGIN }}" >> .env
+          elif [[ "${{ inputs.service-name }}" == "song-service" ]]; then
+            echo "DB_URL=${{ secrets.DB_URL }}" >> .env
+            echo "SONG_PORT=${{ secrets.SONG_PORT }}" >> .env
+            echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
+            echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
+            echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
+            echo "FRONTEND_ORIGIN=${{ secrets.FRONTEND_ORIGIN }}" >> .env
+          fi
+
+      - name: Build & Push Docker Image
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          REPOSITORY: spotify-microservice-application
+        run: |
+          set -e
+          cd ${{ inputs.service-name }}
+          docker build -t $ECR_REGISTRY/$REPOSITORY:${{ env.IMAGE_TAG }} .
+          docker push $ECR_REGISTRY/$REPOSITORY:${{ env.IMAGE_TAG }}
+          echo "image=$ECR_REGISTRY/$REPOSITORY:${{ env.IMAGE_TAG }}" >> $GITHUB_OUTPUT
+
+      - uses: aws-actions/amazon-ecs-render-task-definition@v1
+        id: render-task
+        with:
+          task-definition: ${{ inputs.task-definition-path }}
+          container-name: ${{ inputs.service-name }}
+          image: ${{ steps.build-image.outputs.image }}
+
+      - uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-task.outputs.task-definition }}
+          service: ${{ inputs.service-name }}-service
+          cluster: DevCluster
+          wait-for-service-stability: true
